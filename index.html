@@ -1,68 +1,93 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Caça ao Tesouro AR</title>
+
+  <title>Teste de Realidade Aumentada</title>
+
+  <!-- Biblioteca 3D -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <!-- Biblioteca de realidade aumentada -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar.js"></script>
+
   <style>
-    body { margin: 0; font-family: sans-serif; }
-    #painel {
-      position: fixed; z-index: 10; top: 10px; left: 10px;
-      padding: 12px; background: white; border-radius: 10px;
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
     }
-    button { padding: 10px; }
+
+    #status {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      border-radius: 8px;
+      font-size: 14px;
+    }
   </style>
 </head>
-<body>
-  <div id="painel">
-    <strong>Caça ao Tesouro</strong>
-    <p id="mensagem">Aponte para o marcador Hiro.</p>
-    <button onclick="coletar()">Coletar tesouro</button>
-    <p id="pontos">Pontos: 0</p>
-  </div>
 
-  <a-scene embedded
+<body>
+
+  <div id="status">Procurando marcador Hiro...</div>
+
+  <a-scene
+    embedded
     vr-mode-ui="enabled: false"
-    arjs="sourceType: webcam; debugUIEnabled: false;">
-    <a-marker preset="hiro" id="marcador">
-      <a-box position="0 0.5 0"
-        color="gold" depth="0.5" height="0.5" width="0.5">
-        <a-animation
-          attribute="rotation"
-          to="0 360 0"
-          dur="3000"
-          repeat="indefinite">
-        </a-animation>
+    renderer="antialias: false; colorManagement: true"
+    arjs="
+      sourceType: webcam;
+      trackingMethod: best;
+      detectionMode: mono;
+      debugUIEnabled: false;
+    "
+  >
+
+    <!-- Marcador Hiro -->
+    <a-marker
+      preset="hiro"
+      id="marcador"
+      emitevents="true"
+    >
+
+      <!-- Objeto virtual -->
+      <a-box
+        position="0 0.5 0"
+        width="1"
+        height="1"
+        depth="1"
+        color="#00D9FF"
+        material="roughness: 0.6"
+      >
       </a-box>
+
     </a-marker>
+
+    <!-- Câmera -->
     <a-entity camera></a-entity>
+
   </a-scene>
 
   <script>
-    let pontos = 0;
-    let coletado = false;
+    const marcador = document.getElementById("marcador");
+    const status = document.getElementById("status");
 
-    function coletar() {
-      const marcador = document.getElementById("marcador");
+    marcador.addEventListener("markerFound", () => {
+      status.textContent = "Marcador reconhecido!";
+      status.style.background = "rgba(0, 120, 40, 0.85)";
+    });
 
-      if (!marcador.object3D.visible) {
-        document.getElementById("mensagem").textContent =
-          "Encontre o marcador primeiro!";
-        return;
-      }
-
-      if (!coletado) {
-        pontos += 10;
-        coletado = true;
-        document.getElementById("pontos").textContent =
-          "Pontos: " + pontos;
-        document.getElementById("mensagem").textContent =
-          "Tesouro coletado!";
-      }
-    }
+    marcador.addEventListener("markerLost", () => {
+      status.textContent = "Procurando marcador Hiro...";
+      status.style.background = "rgba(0, 0, 0, 0.75)";
+    });
   </script>
+
 </body>
 </html>
