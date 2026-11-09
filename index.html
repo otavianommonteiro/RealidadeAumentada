@@ -1,16 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
 
   <title>Teste de Realidade Aumentada</title>
 
-  <!-- Biblioteca 3D -->
+  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-  <!-- Biblioteca de realidade aumentada -->
-  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar.js"></script>
 
   <style>
     body {
@@ -31,16 +31,93 @@
       font-size: 14px;
     }
   </style>
+
+  <!-- AJUSTE DE CÂMERA SOMENTE PARA ANDROID -->
+
+  <script>
+    (function () {
+
+      const isAndroid =
+        /Android/i.test(navigator.userAgent);
+
+      // iPhone e outros dispositivos:
+      // mantém o comportamento original do AR.js
+      if (!isAndroid) {
+        return;
+      }
+
+      const mediaDevices =
+        navigator.mediaDevices;
+
+      if (
+        !mediaDevices ||
+        !mediaDevices.getUserMedia
+      ) {
+        return;
+      }
+
+      const originalGetUserMedia =
+        mediaDevices.getUserMedia.bind(mediaDevices);
+
+      mediaDevices.getUserMedia = function (constraints) {
+
+        if (
+          !constraints ||
+          constraints.video === false
+        ) {
+          return originalGetUserMedia(constraints);
+        }
+
+        const videoConstraints =
+          constraints.video === true
+            ? {}
+            : { ...constraints.video };
+
+        // Prioriza a câmera traseira
+        videoConstraints.facingMode = {
+          ideal: "environment"
+        };
+
+        // Resolução para Android
+        videoConstraints.width = {
+          ideal: 640
+        };
+
+        videoConstraints.height = {
+          ideal: 480
+        };
+
+        // Mantém as demais configurações originais
+        return originalGetUserMedia({
+          ...constraints,
+          video: videoConstraints
+        });
+
+      };
+
+    })();
+  </script>
+
+  <!-- AR.js -->
+  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar.js"></script>
+
 </head>
 
 <body>
 
-  <div id="status">Procurando marcador Hiro...</div>
+  <div id="status">
+    Procurando marcador Kanji...
+  </div>
 
   <a-scene
     embedded
     vr-mode-ui="enabled: false"
-    renderer="antialias: false; colorManagement: true"
+
+    renderer="
+      antialias: false;
+      colorManagement: true;
+    "
+
     arjs="
       sourceType: webcam;
       trackingMethod: best;
@@ -49,47 +126,70 @@
     "
   >
 
-    <!-- Marcador kanji -->
+    <!-- MARCADOR KANJI -->
+
     <a-marker
       preset="kanji"
       id="marcador"
       emitevents="true"
     >
 
-      <!-- Objeto virtual -->
-      
-<!-- Objeto virtual: esfera -->
-<a-box
-  position = "0 0.5 0"
-  width ="1"
-  height = "1"
-  depth = "1"
-  color = "#1a73e8"
-  material = "roughness:0.6"
->
-</a-box>
+      <!-- OBJETO VIRTUAL -->
 
+      <a-box
+        position="0 0.5 0"
+        width="1"
+        height="1"
+        depth="1"
+        color="#1a73e8"
+        material="roughness: 0.6"
+      >
+      </a-box>
 
     </a-marker>
 
-    <!-- Câmera -->
+    <!-- CÂMERA -->
+
     <a-entity camera></a-entity>
 
   </a-scene>
 
+  <!-- RECONHECIMENTO DO MARCADOR -->
+
   <script>
-    const marcador = document.getElementById("marcador");
-    const status = document.getElementById("status");
 
-    marcador.addEventListener("markerFound", () => {
-      status.textContent = "Marcador reconhecido!";
-      status.style.background = "rgba(0, 120, 40, 0.85)";
-    });
+    const marcador =
+      document.getElementById("marcador");
 
-    marcador.addEventListener("markerLost", () => {
-      status.textContent = "Procurando marcador Hiro...";
-      status.style.background = "rgba(0, 0, 0, 0.75)";
-    });
+    const status =
+      document.getElementById("status");
+
+    marcador.addEventListener(
+      "markerFound",
+      function () {
+
+        status.textContent =
+          "Marcador reconhecido!";
+
+        status.style.background =
+          "rgba(0, 120, 40, 0.85)";
+
+      }
+    );
+
+    marcador.addEventListener(
+      "markerLost",
+      function () {
+
+        status.textContent =
+          "Procurando marcador Kanji...";
+
+        status.style.background =
+          "rgba(0, 0, 0, 0.75)";
+
+      }
+    );
+
   </script>
 
 </body>
