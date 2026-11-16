@@ -199,6 +199,18 @@ button:hover {
   vr-mode-ui="enabled: false"
   renderer="antialias: false; precision: mediump">
 
+  <!-- CARREGAMENTO ANTECIPADO DAS IMAGENS -->
+
+  <a-assets timeout="15000">
+
+    <img
+      id="imagemTrex"
+      src="./imagens/trex.jpg">
+
+  </a-assets>
+
+  <!-- ILUMINAÇÃO -->
+
   <a-light
     type="ambient"
     intensity="1.5">
@@ -231,35 +243,35 @@ button:hover {
 
   <!-- FOTOGRAFIA DO T-REX -->
 
-  <a-image
-  id="fotoTrex"
-  src="./imagens/trex.jpg"
-  position="0 2.5 -5.75"
-  width="4"
-  height="3"
-  material="
-    shader: flat;
-    side: double;
-    transparent: false;
-    opacity: 1
-  "
-  class="clicavel">
-</a-image>
+  <a-plane
+    id="fotoTrex"
+    position="0 2.5 -5.75"
+    width="4"
+    height="3"
+    material="
+      src: #imagemTrex;
+      shader: flat;
+      side: double;
+      transparent: false;
+      opacity: 1
+    "
+    class="clicavel">
+  </a-plane>
 
   <!-- CÂMERA -->
 
   <a-camera
-  position="0 1.7 0"
-  look-controls="magicWindowTrackingEnabled: false; touchEnabled: true; mouseEnabled: true"
-  wasd-controls="enabled: false">
+    position="0 1.7 0"
+    look-controls="magicWindowTrackingEnabled: false; touchEnabled: true; mouseEnabled: true"
+    wasd-controls="enabled: false">
 
-  <a-cursor
-    color="#c7e99a"
-    fuse="false"
-    raycaster="objects: .clicavel">
-  </a-cursor>
+    <a-cursor
+      color="#c7e99a"
+      fuse="false"
+      raycaster="objects: .clicavel">
+    </a-cursor>
 
-</a-camera>
+  </a-camera>
 
 </a-scene>
 
