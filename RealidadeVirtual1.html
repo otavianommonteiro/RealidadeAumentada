@@ -29,6 +29,7 @@ body {
   color: white;
   text-align: center;
   z-index: 10;
+  box-sizing: border-box;
 }
 
 #cabecalho h2 {
@@ -55,6 +56,7 @@ body {
   text-align: center;
   z-index: 20;
   box-shadow: 0 0 25px black;
+  box-sizing: border-box;
 }
 
 #painel h2 {
@@ -119,6 +121,7 @@ button:hover {
   padding: 10px;
   border-radius: 8px;
   font-size: 12px;
+  max-width: calc(100% - 40px);
 }
 
 </style>
@@ -136,6 +139,7 @@ button:hover {
 
 </div>
 
+
 <!-- INSTRUÇÕES -->
 
 <div id="instrucoes">
@@ -145,6 +149,7 @@ button:hover {
   Arraste a tela para olhar ao redor.
 
 </div>
+
 
 <!-- PAINEL INTERATIVO -->
 
@@ -197,35 +202,35 @@ button:hover {
 
 </div>
 
+
 <!-- MUSEU 3D -->
 
 <a-scene
   background="color: #263b30"
   vr-mode-ui="enabled: false"
-  renderer="antialias: false; precision: mediump">
+  renderer="antialias: false">
 
-  <!-- CARREGAMENTO DA IMAGEM -->
 
-  <a-assets timeout="15000">
+  <!-- CARREGAMENTO DA FOTOGRAFIA -->
+
+  <a-assets timeout="30000">
 
     <img
       id="imagemTrex"
-      src="./imagens/trex.jpg">
+      src="./imagens/trex.jpg"
+      crossorigin="anonymous">
 
   </a-assets>
+
 
   <!-- ILUMINAÇÃO -->
 
   <a-light
     type="ambient"
-    intensity="1.5">
+    color="#ffffff"
+    intensity="1">
   </a-light>
 
-  <a-light
-    type="point"
-    position="0 4 -4"
-    intensity="2">
-  </a-light>
 
   <!-- PISO -->
 
@@ -235,6 +240,7 @@ button:hover {
     height="20"
     color="#777064">
   </a-plane>
+
 
   <!-- PAREDE -->
 
@@ -246,6 +252,7 @@ button:hover {
     color="#435847">
   </a-box>
 
+
   <!-- FOTOGRAFIA DO T-REX -->
 
   <a-plane
@@ -254,12 +261,14 @@ button:hover {
     width="4"
     height="3"
     material="
-      shader: flat;
-      color: white;
-      side: double
+      src: #imagemTrex;
+      color: #ffffff;
+      side: double;
+      transparent: false
     "
     class="clicavel">
   </a-plane>
+
 
   <!-- CÂMERA -->
 
@@ -282,83 +291,8 @@ button:hover {
 
 </a-scene>
 
+
 <script>
-
-// ===================================
-// CARREGAMENTO DA FOTO COM CANVAS
-// ===================================
-
-async function carregarFotoTrex() {
-
-  const imagem = document.getElementById("imagemTrex");
-
-  const plano = document.getElementById("fotoTrex");
-
-  try {
-
-    // Aguarda o carregamento da imagem
-
-    await imagem.decode();
-
-    // Cria o Canvas
-
-    const canvas = document.createElement("canvas");
-
-    canvas.width = 1024;
-    canvas.height = 683;
-
-    const contexto = canvas.getContext("2d");
-
-    // Desenha a fotografia no Canvas
-
-    contexto.drawImage(
-      imagem,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    // Aguarda a criação da cena
-
-    if (!plano.sceneEl.hasLoaded) {
-
-      await new Promise(resolve => {
-        plano.sceneEl.addEventListener(
-          "loaded",
-          resolve,
-          { once: true }
-        );
-      });
-
-    }
-
-    // Entrega o Canvas ao material 3D
-
-    plano.setAttribute("material", {
-      shader: "flat",
-      src: canvas,
-      side: "double",
-      transparent: false
-    });
-
-    console.log("Fotografia do T-Rex carregada!");
-
-  } catch (erro) {
-
-    console.error(
-      "Erro ao carregar fotografia:",
-      erro
-    );
-
-  }
-
-}
-
-// Inicia o carregamento
-
-carregarFotoTrex();
-
 
 // ===================================
 // ABRIR A EXPOSIÇÃO
