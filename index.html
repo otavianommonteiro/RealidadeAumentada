@@ -4,6 +4,7 @@
 
 <head>
   <meta charset="UTF-8">
+
   <meta name="viewport"
         content="width=device-width, initial-scale=1, viewport-fit=cover">
 
@@ -24,20 +25,19 @@
       height: 100%;
       overflow: hidden;
       font-family: Arial, sans-serif;
-      background: #000;
+      background: transparent;
     }
 
     /* MENSAGEM DE STATUS */
 
     #status {
-      position: fixed !important;
+      position: fixed;
 
       top: calc(env(safe-area-inset-top, 0px) + 12px);
       left: 12px;
       right: 12px;
 
       width: auto;
-      height: auto;
       min-height: 40px;
       box-sizing: border-box;
 
@@ -58,7 +58,6 @@
 
       white-space: normal;
       overflow-wrap: anywhere;
-      word-break: normal;
 
       display: block;
       visibility: visible;
@@ -66,24 +65,6 @@
 
       z-index: 999999;
       pointer-events: none;
-    }
-
-    /* CENA DE REALIDADE AUMENTADA */
-
-    a-scene {
-      position: fixed !important;
-      top: 0;
-      left: 0;
-
-      width: 100vw !important;
-      height: 100vh !important;
-
-      z-index: 1;
-    }
-
-    a-scene canvas {
-      width: 100% !important;
-      height: 100% !important;
     }
 
   </style>
@@ -129,7 +110,7 @@
         "rgba(0, 80, 150, 0.90)"
       );
 
-      // TEMPO MÁXIMO PARA CARREGAMENTO
+      // TEMPO MÁXIMO PARA CARREGAMENTO NFT
 
       timeoutNFT = setTimeout(function () {
 
@@ -285,6 +266,7 @@
 
   <a-scene
     embedded
+
     vr-mode-ui="enabled: false"
 
     renderer="
