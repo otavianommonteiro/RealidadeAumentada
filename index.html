@@ -183,16 +183,33 @@
 
         // MARCADOR ENCONTRADO
 
-        marcador.addEventListener("markerFound", function () {
+       
+let redirecionando = false;
 
-          marcadorEncontrado = true;
+marcador.addEventListener("markerFound", function () {
 
-          atualizarStatus(
-            "T-REX RECONHECIDO!",
-            "rgba(0, 130, 40, 0.95)"
-          );
+  marcadorEncontrado = true;
 
-        });
+  if (redirecionando) return;
+
+  redirecionando = true;
+
+  atualizarStatus(
+    "T-REX RECONHECIDO! Entrando na realidade virtual...",
+    "rgba(0, 130, 40, 0.95)"
+  );
+
+  console.log("T-Rex reconhecido! Redirecionando...");
+
+  setTimeout(function () {
+
+    window.location.href =
+      "/RealidadeAumentada/RealidadeVirtual1.html";
+
+  }, 1500);
+
+});
+
 
         // MARCADOR PERDIDO
 
