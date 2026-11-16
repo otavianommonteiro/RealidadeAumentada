@@ -1,12 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Museu Virtual dos Dinossauros</title>
 
@@ -18,7 +16,6 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   overflow: hidden;
-  background: #263b30;
 }
 
 /* CABEÇALHO */
@@ -26,45 +23,18 @@ body {
 #cabecalho {
   position: fixed;
   top: 0;
-  left: 0;
   width: 100%;
   padding: 10px;
-  box-sizing: border-box;
   background: rgba(0,0,0,.85);
   color: white;
   text-align: center;
   z-index: 10;
-  pointer-events: none;
+  box-sizing: border-box;
 }
 
 #cabecalho h2 {
   color: #b8df8b;
   margin: 5px;
-}
-
-/* FOTOGRAFIA PRINCIPAL */
-
-#areaFoto {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%;
-  max-width: 600px;
-  z-index: 5;
-  text-align: center;
-}
-
-#fotoTrex {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 42vh;
-  object-fit: contain;
-  border: 5px solid #c7e99a;
-  border-radius: 10px;
-  box-sizing: border-box;
-  cursor: pointer;
 }
 
 /* PAINEL */
@@ -94,7 +64,6 @@ body {
 }
 
 #fotoPrincipal {
-  display: block;
   width: 100%;
   max-height: 210px;
   object-fit: contain;
@@ -146,20 +115,16 @@ button:hover {
   position: fixed;
   bottom: 12px;
   left: 10px;
-  right: 10px;
   z-index: 10;
   background: rgba(0,0,0,.8);
   color: white;
   padding: 10px;
   border-radius: 8px;
   font-size: 12px;
-  box-sizing: border-box;
-  text-align: center;
-  pointer-events: none;
+  max-width: calc(100% - 40px);
 }
 
 </style>
-
 </head>
 
 <body>
@@ -174,16 +139,6 @@ button:hover {
 
 </div>
 
-<!-- FOTOGRAFIA PRINCIPAL HTML -->
-
-<div id="areaFoto">
-
-  <img
-    id="fotoTrex"
-    src="./imagens/trex.jpg"
-    alt="Tiranossauro Rex">
-
-</div>
 
 <!-- INSTRUÇÕES -->
 
@@ -194,6 +149,7 @@ button:hover {
   Arraste a tela para olhar ao redor.
 
 </div>
+
 
 <!-- PAINEL INTERATIVO -->
 
@@ -246,27 +202,35 @@ button:hover {
 
 </div>
 
-<!-- CENA 3D -->
+
+<!-- MUSEU 3D -->
 
 <a-scene
-
   background="color: #263b30"
-
   vr-mode-ui="enabled: false"
+  renderer="antialias: false">
 
-  renderer="
-    antialias: false;
-    precision: mediump;
-  "
 
->
+  <!-- CARREGAMENTO DA FOTOGRAFIA -->
+
+  <a-assets timeout="30000">
+
+    <img
+      id="imagemTrex"
+      src="./imagens/trex.jpg"
+      crossorigin="anonymous">
+
+  </a-assets>
+
 
   <!-- ILUMINAÇÃO -->
 
   <a-light
     type="ambient"
-    intensity="1.5">
+    color="#ffffff"
+    intensity="1">
   </a-light>
+
 
   <!-- PISO -->
 
@@ -276,6 +240,7 @@ button:hover {
     height="20"
     color="#777064">
   </a-plane>
+
 
   <!-- PAREDE -->
 
@@ -287,55 +252,61 @@ button:hover {
     color="#435847">
   </a-box>
 
+
+  <!-- FOTOGRAFIA DO T-REX -->
+
+  <a-plane
+    id="fotoTrex"
+    position="0 2.5 -5.75"
+    width="4"
+    height="3"
+    material="
+      src: #imagemTrex;
+      color: #ffffff;
+      side: double;
+      transparent: false
+    "
+    class="clicavel">
+  </a-plane>
+
+
   <!-- CÂMERA -->
 
   <a-camera
-
     position="0 1.7 0"
-
     look-controls="
       magicWindowTrackingEnabled: false;
       touchEnabled: true;
-      mouseEnabled: true;
+      mouseEnabled: true
     "
-
     wasd-controls="enabled: false">
+
+    <a-cursor
+      color="#c7e99a"
+      fuse="false"
+      raycaster="objects: .clicavel">
+    </a-cursor>
 
   </a-camera>
 
 </a-scene>
 
+
 <script>
 
 // ===================================
-// VERIFICAR FOTOGRAFIA
+// ABRIR A EXPOSIÇÃO
 // ===================================
 
-const foto = document.getElementById("fotoTrex");
-
-foto.onload = function() {
-
-  console.log("Fotografia do T-Rex carregada!");
-
-};
-
-foto.onerror = function() {
-
-  console.error("Erro ao carregar trex.jpg.");
-
-};
-
-// ===================================
-// ABRIR EXPOSIÇÃO
-// ===================================
-
-foto.addEventListener("click", function() {
+document.getElementById("fotoTrex")
+.addEventListener("click", function() {
 
   document.getElementById("painel").style.display = "block";
 
   mostrarAba("dados");
 
 });
+
 
 // ===================================
 // INFORMAÇÕES DAS ABAS
@@ -402,6 +373,7 @@ const conteudos = {
 
 };
 
+
 // ===================================
 // MOSTRAR INFORMAÇÕES
 // ===================================
@@ -411,8 +383,7 @@ function mostrarAba(aba, botao) {
   document.getElementById("conteudo").innerHTML =
     conteudos[aba];
 
-  const imagem =
-    document.getElementById("imagemExtra");
+  const imagem = document.getElementById("imagemExtra");
 
   imagem.style.display = "none";
   imagem.src = "";
@@ -446,6 +417,7 @@ function mostrarAba(aba, botao) {
   }
 
 }
+
 
 // ===================================
 // FECHAR PAINEL
