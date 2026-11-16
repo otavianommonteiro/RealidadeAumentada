@@ -4,13 +4,15 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Realidade Aumentada - NFT T-Rex</title>
 
   <!-- A-FRAME -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <!-- AR.JS NFT -->
+  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
     body {
@@ -23,71 +25,16 @@
       position: fixed;
       top: 12px;
       left: 12px;
-      z-index: 10;
-      padding: 10px 14px;
-      background: rgba(0, 0, 0, 0.80);
+      right: 12px;
+      z-index: 9999;
+      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.85);
       color: white;
       border-radius: 8px;
       font-size: 14px;
+      text-align: center;
     }
   </style>
-
-  <!-- AJUSTE DE CÂMERA PARA ANDROID -->
-
-  <script>
-    (function () {
-
-      const isAndroid =
-        /Android/i.test(navigator.userAgent);
-
-      if (!isAndroid) return;
-
-      const mediaDevices = navigator.mediaDevices;
-
-      if (!mediaDevices ||
-          !mediaDevices.getUserMedia) return;
-
-      const originalGetUserMedia =
-        mediaDevices.getUserMedia.bind(mediaDevices);
-
-      mediaDevices.getUserMedia = function (constraints) {
-
-        if (!constraints ||
-            constraints.video === false) {
-          return originalGetUserMedia(constraints);
-        }
-
-        const videoConstraints =
-          constraints.video === true
-            ? {}
-            : { ...constraints.video };
-
-        // Câmera traseira
-        videoConstraints.facingMode = {
-          ideal: "environment"
-        };
-
-        // Resolução
-        videoConstraints.width = {
-          ideal: 640
-        };
-
-        videoConstraints.height = {
-          ideal: 480
-        };
-
-        return originalGetUserMedia({
-          ...constraints,
-          video: videoConstraints
-        });
-
-      };
-
-    })();
-  </script>
-
-  <!-- AR.JS PARA NFT -->
-  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar-nft.js"></script>
 
 </head>
 
@@ -97,6 +44,165 @@
     Inicializando reconhecimento NFT...
   </div>
 
+  <script>
+    const status = document.getElementById("status");
+
+    let cameraIniciada = false;
+    let nftCarregado = false;
+    let marcadorEncontrado = false;
+    let timeoutNFT = null;
+
+    function atualizarStatus(mensagem, cor) {
+      status.textContent = mensagem;
+      status.style.background = cor;
+      console.log("[AR]", mensagem);
+    }
+
+    // CÂMERA INICIADA
+    window.addEventListener("camera-init", function () {
+
+      cameraIniciada = true;
+
+      atualizarStatus(
+        "Câmera iniciada. Carregando arquivos NFT...",
+        "rgba(0, 80, 150, 0.90)"
+      );
+
+      // Tempo máximo para carregamento do NFT
+      timeoutNFT = setTimeout(function () {
+
+        if (!nftCarregado) {
+
+          atualizarStatus(
+            "ERRO: NFT não carregado. Verifique os arquivos trex.fset, trex.fset3 e trex.iset.",
+            "rgba(180, 0, 0, 0.90)"
+          );
+
+          console.error(
+            "Tempo esgotado aguardando arjs-nft-loaded."
+          );
+
+        }
+
+      }, 45000);
+
+    });
+
+    // CÂMERA PRONTA
+    window.addEventListener("arjs-video-loaded", function () {
+
+      console.log("Vídeo da câmera carregado.");
+
+    });
+
+    // NFT CARREGADO
+    window.addEventListener("arjs-nft-loaded", function (event) {
+
+      nftCarregado = true;
+
+      clearTimeout(timeoutNFT);
+
+      console.log("NFT carregado com sucesso:", event.detail);
+
+      atualizarStatus(
+        "NFT carregado! Aponte a câmera para o T-Rex.",
+        "rgba(0, 110, 150, 0.90)"
+      );
+
+    });
+
+    // ERRO DE CÂMERA
+    window.addEventListener("camera-error", function (event) {
+
+      console.error("Erro de câmera:", event);
+
+      atualizarStatus(
+        "Erro ao acessar a câmera. Verifique as permissões.",
+        "rgba(180, 0, 0, 0.90)"
+      );
+
+    });
+
+    // AGUARDA A CRIAÇÃO DA CENA
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const scene = document.querySelector("a-scene");
+
+      function configurarMarcador() {
+
+        const marcador = document.getElementById("marcador");
+
+        if (!marcador) {
+          console.error("Marcador NFT não encontrado.");
+          return;
+        }
+
+        console.log("Marcador NFT configurado.");
+
+        // MARCADOR ENCONTRADO
+        marcador.addEventListener("markerFound", function () {
+
+          marcadorEncontrado = true;
+
+          atualizarStatus(
+            "T-REX RECONHECIDO!",
+            "rgba(0, 130, 40, 0.95)"
+          );
+
+        });
+
+        // MARCADOR PERDIDO
+        marcador.addEventListener("markerLost", function () {
+
+          marcadorEncontrado = false;
+
+          atualizarStatus(
+            nftCarregado
+              ? "NFT carregado. Procurando marcador T-Rex..."
+              : "Aguardando carregamento NFT...",
+            "rgba(0, 0, 0, 0.85)"
+          );
+
+        });
+
+      }
+
+      if (scene.hasLoaded) {
+        configurarMarcador();
+      } else {
+        scene.addEventListener("loaded", configurarMarcador, {
+          once: true
+        });
+      }
+
+      scene.addEventListener("loaded", function () {
+        console.log("Cena A-Frame carregada.");
+      });
+
+    });
+
+    // ERROS JAVASCRIPT
+    window.addEventListener("error", function (event) {
+
+      console.error("Erro JavaScript:", event.message);
+
+    });
+
+    // ERROS DE PROMISE
+    window.addEventListener("unhandledrejection", function (event) {
+
+      console.error("Erro de carregamento:", event.reason);
+
+      atualizarStatus(
+        "Erro durante o carregamento. Consulte o Console.",
+        "rgba(180, 0, 0, 0.90)"
+      );
+
+    });
+
+  </script>
+
+  <!-- CENA AR -->
   <a-scene
     embedded
     vr-mode-ui="enabled: false"
@@ -115,8 +221,7 @@
     "
   >
 
-    <!-- MARCADOR NFT T-REX -->
-
+    <!-- MARCADOR NFT -->
     <a-nft
       type="nft"
       url="./trex"
@@ -129,7 +234,6 @@
     >
 
       <!-- OBJETO VIRTUAL -->
-
       <a-box
         position="0 0.5 0"
         width="1"
@@ -143,108 +247,9 @@
     </a-nft>
 
     <!-- CÂMERA -->
-
     <a-entity camera></a-entity>
 
   </a-scene>
-
-  <!-- CONTROLE DO RECONHECIMENTO -->
-
-  <script>
-
-    const marcador =
-      document.getElementById("marcador");
-
-    const status =
-      document.getElementById("status");
-
-    function atualizarStatus(mensagem, cor) {
-
-      status.textContent = mensagem;
-      status.style.background = cor;
-
-    }
-
-    // Inicialização da câmera
-
-    window.addEventListener("camera-init", function () {
-
-      console.log("Câmera inicializada.");
-
-      atualizarStatus(
-        "Câmera iniciada. Carregando NFT...",
-        "rgba(0, 80, 150, 0.85)"
-      );
-
-    });
-
-    // Arquivos NFT carregados
-
-    window.addEventListener("arjs-nft-loaded", function (event) {
-
-      console.log("NFT carregado:", event.detail);
-
-      atualizarStatus(
-        "NFT carregado! Aponte para o T-Rex.",
-        "rgba(0, 100, 150, 0.85)"
-      );
-
-    });
-
-    // Marcador reconhecido
-
-    marcador.addEventListener("markerFound", function () {
-
-      console.log("T-Rex reconhecido!");
-
-      atualizarStatus(
-        "T-REX RECONHECIDO!",
-        "rgba(0, 120, 40, 0.85)"
-      );
-
-    });
-
-    // Marcador perdido
-
-    marcador.addEventListener("markerLost", function () {
-
-      console.log("Marcador perdido.");
-
-      atualizarStatus(
-        "Procurando marcador T-Rex...",
-        "rgba(0, 0, 0, 0.80)"
-      );
-
-    });
-
-    // Erros de câmera
-
-    window.addEventListener("camera-error", function (event) {
-
-      console.error("Erro de câmera:", event);
-
-      atualizarStatus(
-        "Erro ao acessar a câmera.",
-        "rgba(180, 0, 0, 0.85)"
-      );
-
-    });
-
-    // Erros JavaScript
-
-    window.addEventListener("error", function (event) {
-
-      console.error("Erro JavaScript:", event.message);
-
-    });
-
-    window.addEventListener("unhandledrejection", function (event) {
-
-      console.error("Erro de carregamento:", event.reason);
-
-    });
-
-  </script>
 
 </body>
 </html>
