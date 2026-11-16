@@ -18,6 +18,7 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   overflow: hidden;
+  background: #263b30;
 }
 
 /* CABEÇALHO */
@@ -25,18 +26,45 @@ body {
 #cabecalho {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   padding: 10px;
+  box-sizing: border-box;
   background: rgba(0,0,0,.85);
   color: white;
   text-align: center;
   z-index: 10;
-  box-sizing: border-box;
+  pointer-events: none;
 }
 
 #cabecalho h2 {
   color: #b8df8b;
   margin: 5px;
+}
+
+/* FOTOGRAFIA PRINCIPAL */
+
+#areaFoto {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 600px;
+  z-index: 5;
+  text-align: center;
+}
+
+#fotoTrex {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 42vh;
+  object-fit: contain;
+  border: 5px solid #c7e99a;
+  border-radius: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 /* PAINEL */
@@ -126,6 +154,8 @@ button:hover {
   border-radius: 8px;
   font-size: 12px;
   box-sizing: border-box;
+  text-align: center;
+  pointer-events: none;
 }
 
 </style>
@@ -141,6 +171,17 @@ button:hover {
   <h2>🦖 Museu Virtual dos Dinossauros</h2>
 
   <p>Conheça os gigantes da pré-história</p>
+
+</div>
+
+<!-- FOTOGRAFIA PRINCIPAL HTML -->
+
+<div id="areaFoto">
+
+  <img
+    id="fotoTrex"
+    src="./imagens/trex.jpg"
+    alt="Tiranossauro Rex">
 
 </div>
 
@@ -205,7 +246,7 @@ button:hover {
 
 </div>
 
-<!-- MUSEU 3D -->
+<!-- CENA 3D -->
 
 <a-scene
 
@@ -214,22 +255,11 @@ button:hover {
   vr-mode-ui="enabled: false"
 
   renderer="
-    antialias: true;
+    antialias: false;
     precision: mediump;
-    colorManagement: true;
   "
 
 >
-
-  <!-- CARREGAMENTO DAS IMAGENS -->
-
-  <a-assets timeout="30000">
-
-    <img
-      id="imagemTrex"
-      src="./imagens/trex.jpg">
-
-  </a-assets>
 
   <!-- ILUMINAÇÃO -->
 
@@ -238,64 +268,24 @@ button:hover {
     intensity="1.5">
   </a-light>
 
-  <a-light
-    type="point"
-    position="0 4 -4"
-    intensity="2">
-  </a-light>
-
   <!-- PISO -->
 
   <a-plane
-
     rotation="-90 0 0"
-
     width="12"
-
     height="20"
-
     color="#777064">
-
   </a-plane>
 
   <!-- PAREDE -->
 
   <a-box
-
     position="0 2.5 -6"
-
     width="12"
-
     height="5"
-
     depth=".2"
-
     color="#435847">
-
   </a-box>
-
-  <!-- FOTOGRAFIA PRINCIPAL DO T-REX -->
-
-  <a-plane
-
-    id="fotoTrex"
-
-    position="0 2.5 -5.75"
-
-    width="4"
-
-    height="3"
-
-    material="
-      shader: flat;
-      src: #imagemTrex;
-      side: double;
-      transparent: false;
-    "
-
-    class="clicavel">
-
-  </a-plane>
 
   <!-- CÂMERA -->
 
@@ -311,16 +301,6 @@ button:hover {
 
     wasd-controls="enabled: false">
 
-    <a-cursor
-
-      color="#c7e99a"
-
-      fuse="false"
-
-      raycaster="objects: .clicavel">
-
-    </a-cursor>
-
   </a-camera>
 
 </a-scene>
@@ -328,33 +308,28 @@ button:hover {
 <script>
 
 // ===================================
-// VERIFICAÇÃO DA FOTOGRAFIA
+// VERIFICAR FOTOGRAFIA
 // ===================================
 
-const imagem = document.getElementById("imagemTrex");
+const foto = document.getElementById("fotoTrex");
 
-imagem.onload = function() {
+foto.onload = function() {
 
-  console.log(
-    "Fotografia do T-Rex carregada com sucesso!"
-  );
+  console.log("Fotografia do T-Rex carregada!");
 
 };
 
-imagem.onerror = function() {
+foto.onerror = function() {
 
-  console.error(
-    "Erro ao carregar ./imagens/trex.jpg"
-  );
+  console.error("Erro ao carregar trex.jpg.");
 
 };
 
 // ===================================
-// ABRIR A EXPOSIÇÃO
+// ABRIR EXPOSIÇÃO
 // ===================================
 
-document.getElementById("fotoTrex")
-.addEventListener("click", function() {
+foto.addEventListener("click", function() {
 
   document.getElementById("painel").style.display = "block";
 
@@ -427,7 +402,6 @@ const conteudos = {
 
 };
 
-
 // ===================================
 // MOSTRAR INFORMAÇÕES
 // ===================================
@@ -437,25 +411,23 @@ function mostrarAba(aba, botao) {
   document.getElementById("conteudo").innerHTML =
     conteudos[aba];
 
-  const imagemExtra =
+  const imagem =
     document.getElementById("imagemExtra");
 
-  imagemExtra.style.display = "none";
-  imagemExtra.src = "";
+  imagem.style.display = "none";
+  imagem.src = "";
 
   if (aba === "tamanho") {
 
-    imagemExtra.src = "./imagens/comparacao.jpg";
-
-    imagemExtra.style.display = "block";
+    imagem.src = "./imagens/comparacao.jpg";
+    imagem.style.display = "block";
 
   }
 
   if (aba === "habitat") {
 
-    imagemExtra.src = "./imagens/habitat.jpg";
-
-    imagemExtra.style.display = "block";
+    imagem.src = "./imagens/habitat.jpg";
+    imagem.style.display = "block";
 
   }
 
@@ -474,7 +446,6 @@ function mostrarAba(aba, botao) {
   }
 
 }
-
 
 // ===================================
 // FECHAR PAINEL
