@@ -1,37 +1,103 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Teste A-Frame Android</title>
+<title>Teste de Imagem 3D</title>
 
 <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+}
+
+#status {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  background: black;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+}
+</style>
 
 </head>
 
 <body>
 
+<div id="status">Carregando fotografia...</div>
+
 <a-scene
-  renderer="antialias: false; precision: mediump">
+  renderer="antialias: false; precision: mediump"
+  vr-mode-ui="enabled: false">
 
   <a-assets>
-    <img id="foto" src="./imagens/trex.jpg">
+    <img
+      id="fotoTrex"
+      src="./imagens/trex.jpg"
+      crossorigin="anonymous">
   </a-assets>
 
-  <a-light type="ambient" intensity="2"></a-light>
+  <!-- PAREDE -->
+  <a-box
+    position="0 2 -5"
+    width="10"
+    height="5"
+    depth="0.2"
+    color="#435847">
+  </a-box>
 
+  <!-- FOTOGRAFIA -->
   <a-plane
-    position="0 2 -4"
+    id="exposicao"
+    position="0 2.5 -4.85"
     width="4"
     height="3"
-    material="shader: flat; src: #foto">
+    material="
+      shader: flat;
+      src: #fotoTrex;
+      side: double
+    ">
   </a-plane>
 
-  <a-camera position="0 1.7 0"></a-camera>
+  <!-- CÂMERA SEM CONTROLE DE ORIENTAÇÃO -->
+  <a-camera
+    position="0 1.7 0"
+    look-controls="enabled: false"
+    wasd-controls="enabled: false">
+  </a-camera>
 
 </a-scene>
+
+<script>
+
+const imagem = document.getElementById("fotoTrex");
+const status = document.getElementById("status");
+
+imagem.addEventListener("load", function() {
+  status.innerHTML =
+    "Imagem carregada: " +
+    imagem.naturalWidth + " x " +
+    imagem.naturalHeight;
+});
+
+imagem.addEventListener("error", function() {
+  status.innerHTML = "ERRO AO CARREGAR A IMAGEM";
+});
+
+document.querySelector("a-scene")
+.addEventListener("loaded", function() {
+  console.log("Cena A-Frame carregada");
+});
+
+</script>
 
 </body>
 </html>
