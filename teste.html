@@ -1,57 +1,347 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Teste de Fotografia</title>
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<title>Museu dos Dinossauros - Visita Virtual 360°</title>
+
+<!-- A-FRAME -->
+
+<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
 <style>
+
 body {
+
   margin: 0;
+  overflow: hidden;
+
+  font-family: Arial, sans-serif;
+
   background: #263b30;
-  color: white;
-  font-family: Arial;
-  text-align: center;
+
 }
 
-#foto {
-  width: 90%;
-  max-width: 600px;
-  margin-top: 30px;
-  border: 5px solid #c7e99a;
-  border-radius: 10px;
+/* CABEÇALHO */
+
+#cabecalho {
+
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 15px;
+
+  background: rgba(0,0,0,0.80);
+
+  color: white;
+
+  text-align: center;
+
+  z-index: 10;
+
+  pointer-events: none;
+
 }
+
+#cabecalho h2 {
+
+  margin: 0;
+
+  font-size: 21px;
+
+}
+
+#cabecalho p {
+
+  margin: 6px 0 0;
+
+  font-size: 13px;
+
+}
+
+/* BOTÃO VOLTAR */
+
+#voltar {
+
+  position: fixed;
+
+  top: 105px;
+  left: 12px;
+
+  padding: 10px 15px;
+
+  background: #c7e99a;
+
+  color: #263b30;
+
+  border: none;
+
+  border-radius: 8px;
+
+  font-weight: bold;
+
+  z-index: 11;
+
+  cursor: pointer;
+
+}
+
+/* INSTRUÇÕES */
+
+#instrucao {
+
+  position: fixed;
+
+  bottom: 20px;
+
+  left: 5%;
+
+  width: 90%;
+
+  box-sizing: border-box;
+
+  padding: 12px;
+
+  background: rgba(0,0,0,0.80);
+
+  color: white;
+
+  text-align: center;
+
+  border-radius: 10px;
+
+  z-index: 10;
+
+  font-size: 13px;
+
+  pointer-events: none;
+
+}
+
+/* STATUS */
+
+#status {
+
+  position: fixed;
+
+  top: 175px;
+
+  left: 5%;
+
+  width: 90%;
+
+  padding: 10px;
+
+  box-sizing: border-box;
+
+  background: rgba(0,0,0,0.75);
+
+  color: white;
+
+  text-align: center;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+
+  z-index: 10;
+
+  pointer-events: none;
+
+}
+
 </style>
+
 </head>
 
 <body>
 
-<h2>Museu dos Dinossauros</h2>
+<!-- TÍTULO DO MUSEU -->
 
-<p>Teste de exibição da fotografia</p>
+<div id="cabecalho">
 
-<img
-  id="foto"
-  src="./imagens/trex.jpg"
-  alt="Tiranossauro Rex">
+  <h2>MUSEU DOS DINOSSAUROS</h2>
 
-<p id="status">Carregando...</p>
+  <p>Explore o ambiente pré-histórico em 360 graus!</p>
+
+</div>
+
+<!-- BOTÃO VOLTAR -->
+
+<button
+  id="voltar"
+  onclick="window.location.href='/RealidadeAumentada/index.html'">
+
+  Voltar
+
+</button>
+
+<!-- STATUS -->
+
+<div id="status">
+
+  Carregando ambiente virtual...
+
+</div>
+
+<!-- INSTRUÇÕES -->
+
+<div id="instrucao">
+
+  Arraste a tela com o dedo ou utilize o mouse
+  para girar e explorar o museu em 360°.
+
+</div>
+
+<!-- CENA 3D -->
+
+<a-scene
+
+  embedded
+
+  vr-mode-ui="enabled: true"
+
+  renderer="
+    antialias: true;
+    colorManagement: true;
+  "
+
+>
+
+  <!-- IMAGEM PANORÂMICA DO MUSEU -->
+
+  <a-sky
+
+    id="panorama"
+
+    src="./imagens/museu-360.jpg"
+
+    rotation="0 -90 0"
+
+  >
+
+  </a-sky>
+
+  <!-- FOTOGRAFIA DO T-REX COMO PEÇA DA EXPOSIÇÃO -->
+
+  <a-image
+
+    id="fotoTrex"
+
+    src="./imagens/trex.jpg"
+
+    position="0 1.6 -3"
+
+    width="2"
+
+    height="1.4"
+
+    material="
+      shader: flat;
+      side: double;
+    "
+
+  >
+
+  </a-image>
+
+  <!-- CÂMERA COM CONTROLE 360° -->
+
+  <a-entity position="0 1.6 0">
+
+    <a-camera
+
+      look-controls="enabled: true"
+
+      wasd-controls="enabled: false"
+
+    >
+
+    </a-camera>
+
+  </a-entity>
+
+</a-scene>
 
 <script>
 
-const foto = document.getElementById("foto");
+// ELEMENTOS
+
+const panorama = document.getElementById("panorama");
+
+const fotoTrex = document.getElementById("fotoTrex");
+
 const status = document.getElementById("status");
 
-foto.onload = function() {
-  status.innerHTML = "Fotografia carregada com sucesso!";
-};
+// PANORAMA CARREGADO
 
-foto.onerror = function() {
-  status.innerHTML = "Erro ao carregar fotografia.";
-};
+panorama.addEventListener("materialtextureloaded", function() {
+
+  console.log("Panorama do museu carregado!");
+
+  status.textContent =
+    "Museu carregado! Boa visita!";
+
+  status.style.background =
+    "rgba(0,110,50,0.85)";
+
+  setTimeout(function() {
+
+    status.style.display = "none";
+
+  }, 4000);
+
+});
+
+// ERRO NO PANORAMA
+
+panorama.addEventListener("materialtextureerror", function() {
+
+  console.error("Erro ao carregar o panorama.");
+
+  status.textContent =
+    "Erro ao carregar museu-360.jpg. Verifique o arquivo e o caminho.";
+
+  status.style.background =
+    "rgba(180,0,0,0.90)";
+
+});
+
+// FOTOGRAFIA DO T-REX
+
+fotoTrex.addEventListener("materialtextureloaded", function() {
+
+  console.log("Fotografia do T-Rex carregada.");
+
+});
+
+fotoTrex.addEventListener("materialtextureerror", function() {
+
+  console.error("Erro ao carregar trex.jpg.");
+
+});
+
+// ERROS JAVASCRIPT
+
+window.addEventListener("error", function(event) {
+
+  console.error("Erro:", event.message);
+
+});
 
 </script>
 
 </body>
+
 </html>
