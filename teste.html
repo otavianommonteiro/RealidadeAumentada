@@ -8,157 +8,124 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1">
 
-<title>Museu dos Dinossauros - Visita Virtual 360°</title>
-
-<!-- A-FRAME -->
+<title>Museu Virtual dos Dinossauros</title>
 
 <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
 <style>
 
 body {
-
   margin: 0;
-  overflow: hidden;
-
   font-family: Arial, sans-serif;
-
-  background: #263b30;
-
+  overflow: hidden;
 }
 
 /* CABEÇALHO */
 
 #cabecalho {
-
   position: fixed;
-
   top: 0;
-  left: 0;
-
   width: 100%;
-
-  box-sizing: border-box;
-
-  padding: 15px;
-
-  background: rgba(0,0,0,0.80);
-
+  padding: 10px;
+  background: rgba(0,0,0,.85);
   color: white;
-
   text-align: center;
-
   z-index: 10;
-
-  pointer-events: none;
-
+  box-sizing: border-box;
 }
 
 #cabecalho h2 {
-
-  margin: 0;
-
-  font-size: 21px;
-
+  color: #b8df8b;
+  margin: 5px;
 }
 
-#cabecalho p {
+/* PAINEL */
 
-  margin: 6px 0 0;
-
-  font-size: 13px;
-
-}
-
-/* BOTÃO VOLTAR */
-
-#voltar {
-
+#painel {
+  display: none;
   position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 88%;
+  max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: #20382a;
+  color: white;
+  padding: 18px;
+  border-radius: 15px;
+  text-align: center;
+  z-index: 20;
+  box-shadow: 0 0 25px black;
+  box-sizing: border-box;
+}
 
-  top: 105px;
-  left: 12px;
+#painel h2 {
+  color: #c7e99a;
+}
 
-  padding: 10px 15px;
+#fotoPrincipal {
+  display: block;
+  width: 100%;
+  max-height: 210px;
+  object-fit: contain;
+  border-radius: 10px;
+}
 
-  background: #c7e99a;
+#conteudo {
+  text-align: left;
+  line-height: 1.6;
+}
 
-  color: #263b30;
+#botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin: 15px 0;
+}
 
+button {
+  background: #719b4c;
+  color: white;
   border: none;
-
   border-radius: 8px;
-
-  font-weight: bold;
-
-  z-index: 11;
-
+  padding: 11px 14px;
   cursor: pointer;
+}
 
+button:hover {
+  background: #91b968;
+}
+
+.ativo {
+  background: #c28b37;
+}
+
+#imagemExtra {
+  display: none;
+  width: 100%;
+  max-height: 230px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 
 /* INSTRUÇÕES */
 
-#instrucao {
-
+#instrucoes {
   position: fixed;
-
-  bottom: 20px;
-
-  left: 5%;
-
-  width: 90%;
-
-  box-sizing: border-box;
-
-  padding: 12px;
-
-  background: rgba(0,0,0,0.80);
-
-  color: white;
-
-  text-align: center;
-
-  border-radius: 10px;
-
+  bottom: 12px;
+  left: 10px;
+  right: 10px;
   z-index: 10;
-
-  font-size: 13px;
-
-  pointer-events: none;
-
-}
-
-/* STATUS */
-
-#status {
-
-  position: fixed;
-
-  top: 175px;
-
-  left: 5%;
-
-  width: 90%;
-
+  background: rgba(0,0,0,.8);
+  color: white;
   padding: 10px;
-
-  box-sizing: border-box;
-
-  background: rgba(0,0,0,0.75);
-
-  color: white;
-
-  text-align: center;
-
   border-radius: 8px;
-
-  font-size: 13px;
-
-  z-index: 10;
-
-  pointer-events: none;
-
+  font-size: 12px;
+  box-sizing: border-box;
 }
 
 </style>
@@ -167,181 +134,359 @@ body {
 
 <body>
 
-<!-- TÍTULO DO MUSEU -->
+<!-- CABEÇALHO -->
 
 <div id="cabecalho">
 
-  <h2>MUSEU DOS DINOSSAUROS</h2>
+  <h2>🦖 Museu Virtual dos Dinossauros</h2>
 
-  <p>Explore o ambiente pré-histórico em 360 graus!</p>
-
-</div>
-
-<!-- BOTÃO VOLTAR -->
-
-<button
-  id="voltar"
-  onclick="window.location.href='/RealidadeAumentada/index.html'">
-
-  Voltar
-
-</button>
-
-<!-- STATUS -->
-
-<div id="status">
-
-  Carregando ambiente virtual...
+  <p>Conheça os gigantes da pré-história</p>
 
 </div>
 
 <!-- INSTRUÇÕES -->
 
-<div id="instrucao">
+<div id="instrucoes">
 
-  Arraste a tela com o dedo ou utilize o mouse
-  para girar e explorar o museu em 360°.
+  Clique na fotografia para conhecer o T-Rex.
+  <br>
+  Arraste a tela para olhar ao redor.
 
 </div>
 
-<!-- CENA 3D -->
+<!-- PAINEL INTERATIVO -->
+
+<div id="painel">
+
+  <img
+    id="fotoPrincipal"
+    src="./imagens/trex.jpg"
+    alt="Tiranossauro Rex">
+
+  <h2>🦖 Tiranossauro Rex</h2>
+
+  <div id="botoes">
+
+    <button onclick="mostrarAba('dados', this)">
+      Dados científicos
+    </button>
+
+    <button onclick="mostrarAba('curiosidades', this)">
+      Curiosidades
+    </button>
+
+    <button onclick="mostrarAba('tamanho', this)">
+      Comparação
+    </button>
+
+    <button onclick="mostrarAba('habitat', this)">
+      Habitat
+    </button>
+
+  </div>
+
+  <div id="conteudo">
+
+    O Tiranossauro Rex foi um dos maiores predadores
+    terrestres que já existiram.
+
+  </div>
+
+  <img
+    id="imagemExtra"
+    src=""
+    alt="Imagem complementar">
+
+  <br><br>
+
+  <button onclick="fecharPainel()">
+    Voltar ao museu
+  </button>
+
+</div>
+
+<!-- MUSEU 3D -->
 
 <a-scene
 
-  embedded
+  background="color: #263b30"
 
-  vr-mode-ui="enabled: true"
+  vr-mode-ui="enabled: false"
 
   renderer="
     antialias: true;
+    precision: mediump;
     colorManagement: true;
   "
 
 >
 
-  <!-- IMAGEM PANORÂMICA DO MUSEU -->
+  <!-- CARREGAMENTO DAS IMAGENS -->
 
-  <a-sky
+  <a-assets timeout="30000">
 
-    id="panorama"
+    <img
+      id="imagemTrex"
+      src="./imagens/trex.jpg">
 
-    src="./imagens/museu-360.jpg"
+  </a-assets>
 
-    rotation="0 -90 0"
+  <!-- ILUMINAÇÃO -->
 
-  >
+  <a-light
+    type="ambient"
+    intensity="1.5">
+  </a-light>
 
-  </a-sky>
+  <a-light
+    type="point"
+    position="0 4 -4"
+    intensity="2">
+  </a-light>
 
-  <!-- FOTOGRAFIA DO T-REX COMO PEÇA DA EXPOSIÇÃO -->
+  <!-- PISO -->
 
-  <a-image
+  <a-plane
+
+    rotation="-90 0 0"
+
+    width="12"
+
+    height="20"
+
+    color="#777064">
+
+  </a-plane>
+
+  <!-- PAREDE -->
+
+  <a-box
+
+    position="0 2.5 -6"
+
+    width="12"
+
+    height="5"
+
+    depth=".2"
+
+    color="#435847">
+
+  </a-box>
+
+  <!-- FOTOGRAFIA PRINCIPAL DO T-REX -->
+
+  <a-plane
 
     id="fotoTrex"
 
-    src="./imagens/trex.jpg"
+    position="0 2.5 -5.75"
 
-    position="0 1.6 -3"
+    width="4"
 
-    width="2"
-
-    height="1.4"
+    height="3"
 
     material="
       shader: flat;
+      src: #imagemTrex;
       side: double;
+      transparent: false;
     "
 
-  >
+    class="clicavel">
 
-  </a-image>
+  </a-plane>
 
-  <!-- CÂMERA COM CONTROLE 360° -->
+  <!-- CÂMERA -->
 
-  <a-entity position="0 1.6 0">
+  <a-camera
 
-    <a-camera
+    position="0 1.7 0"
 
-      look-controls="enabled: true"
+    look-controls="
+      magicWindowTrackingEnabled: false;
+      touchEnabled: true;
+      mouseEnabled: true;
+    "
 
-      wasd-controls="enabled: false"
+    wasd-controls="enabled: false">
 
-    >
+    <a-cursor
 
-    </a-camera>
+      color="#c7e99a"
 
-  </a-entity>
+      fuse="false"
+
+      raycaster="objects: .clicavel">
+
+    </a-cursor>
+
+  </a-camera>
 
 </a-scene>
 
 <script>
 
-// ELEMENTOS
+// ===================================
+// VERIFICAÇÃO DA FOTOGRAFIA
+// ===================================
 
-const panorama = document.getElementById("panorama");
+const imagem = document.getElementById("imagemTrex");
 
-const fotoTrex = document.getElementById("fotoTrex");
+imagem.onload = function() {
 
-const status = document.getElementById("status");
+  console.log(
+    "Fotografia do T-Rex carregada com sucesso!"
+  );
 
-// PANORAMA CARREGADO
+};
 
-panorama.addEventListener("materialtextureloaded", function() {
+imagem.onerror = function() {
 
-  console.log("Panorama do museu carregado!");
+  console.error(
+    "Erro ao carregar ./imagens/trex.jpg"
+  );
 
-  status.textContent =
-    "Museu carregado! Boa visita!";
+};
 
-  status.style.background =
-    "rgba(0,110,50,0.85)";
+// ===================================
+// ABRIR A EXPOSIÇÃO
+// ===================================
 
-  setTimeout(function() {
+document.getElementById("fotoTrex")
+.addEventListener("click", function() {
 
-    status.style.display = "none";
+  document.getElementById("painel").style.display = "block";
 
-  }, 4000);
-
-});
-
-// ERRO NO PANORAMA
-
-panorama.addEventListener("materialtextureerror", function() {
-
-  console.error("Erro ao carregar o panorama.");
-
-  status.textContent =
-    "Erro ao carregar museu-360.jpg. Verifique o arquivo e o caminho.";
-
-  status.style.background =
-    "rgba(180,0,0,0.90)";
+  mostrarAba("dados");
 
 });
 
-// FOTOGRAFIA DO T-REX
+// ===================================
+// INFORMAÇÕES DAS ABAS
+// ===================================
 
-fotoTrex.addEventListener("materialtextureloaded", function() {
+const conteudos = {
 
-  console.log("Fotografia do T-Rex carregada.");
+  dados: `
+    <h3>📚 Dados científicos</h3>
 
-});
+    <p><strong>Nome científico:</strong> Tyrannosaurus rex</p>
 
-fotoTrex.addEventListener("materialtextureerror", function() {
+    <p><strong>Período:</strong> Cretáceo Superior,
+    aproximadamente 68 a 66 milhões de anos atrás.</p>
 
-  console.error("Erro ao carregar trex.jpg.");
+    <p><strong>Alimentação:</strong> Carnívora.</p>
 
-});
+    <p><strong>Comprimento:</strong> Aproximadamente
+    12 a 13 metros.</p>
 
-// ERROS JAVASCRIPT
+    <p><strong>Peso:</strong> Podia ultrapassar
+    8 toneladas.</p>
 
-window.addEventListener("error", function(event) {
+    <p><strong>Localização:</strong> América do Norte.</p>
+  `,
 
-  console.error("Erro:", event.message);
+  curiosidades: `
+    <h3>🔎 Você sabia?</h3>
 
-});
+    <p>1. O T-Rex possuía dentes grandes e serrilhados.</p>
+
+    <p>2. Seus braços eram curtos, mas musculosos.</p>
+
+    <p>3. Possuía uma mordida extremamente poderosa.</p>
+
+    <p>4. Seu nome significa "rei dos lagartos tiranos".</p>
+  `,
+
+  tamanho: `
+    <h3>📏 Comparação de tamanho</h3>
+
+    <p>O T-Rex podia alcançar aproximadamente
+    12 a 13 metros de comprimento.</p>
+
+    <p>Isso equivale a vários seres humanos
+    posicionados em fila!</p>
+
+    <p>Observe a imagem para visualizar
+    a diferença de tamanho.</p>
+  `,
+
+  habitat: `
+    <h3>🌳 Onde vivia?</h3>
+
+    <p>O T-Rex habitava regiões que hoje fazem
+    parte da América do Norte.</p>
+
+    <p>Vivia em ambientes que incluíam florestas,
+    planícies e regiões próximas a rios.</p>
+
+    <p>Esses ambientes eram muito diferentes
+    dos atuais.</p>
+  `
+
+};
+
+
+// ===================================
+// MOSTRAR INFORMAÇÕES
+// ===================================
+
+function mostrarAba(aba, botao) {
+
+  document.getElementById("conteudo").innerHTML =
+    conteudos[aba];
+
+  const imagemExtra =
+    document.getElementById("imagemExtra");
+
+  imagemExtra.style.display = "none";
+  imagemExtra.src = "";
+
+  if (aba === "tamanho") {
+
+    imagemExtra.src = "./imagens/comparacao.jpg";
+
+    imagemExtra.style.display = "block";
+
+  }
+
+  if (aba === "habitat") {
+
+    imagemExtra.src = "./imagens/habitat.jpg";
+
+    imagemExtra.style.display = "block";
+
+  }
+
+  document.querySelectorAll("#botoes button")
+  .forEach(b => b.classList.remove("ativo"));
+
+  if (botao) {
+
+    botao.classList.add("ativo");
+
+  } else {
+
+    document.querySelectorAll("#botoes button")[0]
+    .classList.add("ativo");
+
+  }
+
+}
+
+
+// ===================================
+// FECHAR PAINEL
+// ===================================
+
+function fecharPainel() {
+
+  document.getElementById("painel").style.display = "none";
+
+}
 
 </script>
 
 </body>
-
 </html>
