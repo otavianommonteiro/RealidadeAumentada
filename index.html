@@ -4,7 +4,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <title>Realidade Aumentada - NFT T-Rex</title>
 
@@ -15,36 +16,90 @@
   <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar-nft.js"></script>
 
   <style>
-    body {
+
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
       font-family: Arial, sans-serif;
+      background: #000;
     }
 
+    /* MENSAGEM DE STATUS */
+
     #status {
-      position: fixed;
-      top: 12px;
+      position: fixed !important;
+
+      top: calc(env(safe-area-inset-top, 0px) + 12px);
       left: 12px;
       right: 12px;
-      z-index: 9999;
+
+      width: auto;
+      height: auto;
+      min-height: 40px;
+      box-sizing: border-box;
+
       padding: 12px 14px;
-      background: rgba(0, 0, 0, 0.85);
-      color: white;
-      border-radius: 8px;
+
+      background: rgba(0, 0, 0, 0.90);
+      color: #ffffff;
+
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 10px;
+
+      font-family: Arial, sans-serif;
       font-size: 14px;
+      line-height: 1.5;
+      font-weight: bold;
+
       text-align: center;
+
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: normal;
+
+      display: block;
+      visibility: visible;
+      opacity: 1;
+
+      z-index: 999999;
+      pointer-events: none;
     }
+
+    /* CENA DE REALIDADE AUMENTADA */
+
+    a-scene {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+
+      width: 100vw !important;
+      height: 100vh !important;
+
+      z-index: 1;
+    }
+
+    a-scene canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
   </style>
 
 </head>
 
 <body>
 
+  <!-- MENSAGEM NA TELA -->
+
   <div id="status">
     Inicializando reconhecimento NFT...
   </div>
 
   <script>
+
     const status = document.getElementById("status");
 
     let cameraIniciada = false;
@@ -52,13 +107,19 @@
     let marcadorEncontrado = false;
     let timeoutNFT = null;
 
+    // ATUALIZAÇÃO DA MENSAGEM
+
     function atualizarStatus(mensagem, cor) {
+
       status.textContent = mensagem;
       status.style.background = cor;
+
       console.log("[AR]", mensagem);
+
     }
 
     // CÂMERA INICIADA
+
     window.addEventListener("camera-init", function () {
 
       cameraIniciada = true;
@@ -68,7 +129,8 @@
         "rgba(0, 80, 150, 0.90)"
       );
 
-      // Tempo máximo para carregamento do NFT
+      // TEMPO MÁXIMO PARA CARREGAMENTO
+
       timeoutNFT = setTimeout(function () {
 
         if (!nftCarregado) {
@@ -89,6 +151,7 @@
     });
 
     // CÂMERA PRONTA
+
     window.addEventListener("arjs-video-loaded", function () {
 
       console.log("Vídeo da câmera carregado.");
@@ -96,6 +159,7 @@
     });
 
     // NFT CARREGADO
+
     window.addEventListener("arjs-nft-loaded", function (event) {
 
       nftCarregado = true;
@@ -112,6 +176,7 @@
     });
 
     // ERRO DE CÂMERA
+
     window.addEventListener("camera-error", function (event) {
 
       console.error("Erro de câmera:", event);
@@ -124,6 +189,7 @@
     });
 
     // AGUARDA A CRIAÇÃO DA CENA
+
     document.addEventListener("DOMContentLoaded", function () {
 
       const scene = document.querySelector("a-scene");
@@ -133,13 +199,17 @@
         const marcador = document.getElementById("marcador");
 
         if (!marcador) {
+
           console.error("Marcador NFT não encontrado.");
+
           return;
+
         }
 
         console.log("Marcador NFT configurado.");
 
         // MARCADOR ENCONTRADO
+
         marcador.addEventListener("markerFound", function () {
 
           marcadorEncontrado = true;
@@ -152,6 +222,7 @@
         });
 
         // MARCADOR PERDIDO
+
         marcador.addEventListener("markerLost", function () {
 
           marcadorEncontrado = false;
@@ -168,20 +239,27 @@
       }
 
       if (scene.hasLoaded) {
+
         configurarMarcador();
+
       } else {
+
         scene.addEventListener("loaded", configurarMarcador, {
           once: true
         });
+
       }
 
       scene.addEventListener("loaded", function () {
+
         console.log("Cena A-Frame carregada.");
+
       });
 
     });
 
     // ERROS JAVASCRIPT
+
     window.addEventListener("error", function (event) {
 
       console.error("Erro JavaScript:", event.message);
@@ -189,6 +267,7 @@
     });
 
     // ERROS DE PROMISE
+
     window.addEventListener("unhandledrejection", function (event) {
 
       console.error("Erro de carregamento:", event.reason);
@@ -203,6 +282,7 @@
   </script>
 
   <!-- CENA AR -->
+
   <a-scene
     embedded
     vr-mode-ui="enabled: false"
@@ -222,18 +302,20 @@
   >
 
     <!-- MARCADOR NFT -->
+
     <a-nft
-  type="nft"
-  url="/RealidadeAumentada/trex/trex"
-  id="marcador"
-  emitevents="true"
-  smooth="true"
-  smoothCount="10"
-  smoothTolerance="0.01"
-  smoothThreshold="5"
->
+      type="nft"
+      url="/RealidadeAumentada/trex/trex"
+      id="marcador"
+      emitevents="true"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance="0.01"
+      smoothThreshold="5"
+    >
 
       <!-- OBJETO VIRTUAL -->
+
       <a-box
         position="0 0.5 0"
         width="1"
@@ -247,9 +329,11 @@
     </a-nft>
 
     <!-- CÂMERA -->
+
     <a-entity camera></a-entity>
 
   </a-scene>
 
 </body>
+
 </html>
