@@ -7,7 +7,7 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
 
-  <title>Teste de Realidade Aumentada</title>
+  <title>Realidade Aumentada - UniBH</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -32,7 +32,7 @@
     }
   </style>
 
-  <!-- AJUSTE DE CÂMERA SOMENTE PARA ANDROID -->
+  <!-- AJUSTE DE CÂMERA PARA ANDROID -->
 
   <script>
     (function () {
@@ -40,31 +40,20 @@
       const isAndroid =
         /Android/i.test(navigator.userAgent);
 
-      // iPhone e outros dispositivos:
-      // mantém o comportamento original do AR.js
-      if (!isAndroid) {
-        return;
-      }
+      if (!isAndroid) return;
 
-      const mediaDevices =
-        navigator.mediaDevices;
+      const mediaDevices = navigator.mediaDevices;
 
-      if (
-        !mediaDevices ||
-        !mediaDevices.getUserMedia
-      ) {
-        return;
-      }
+      if (!mediaDevices ||
+          !mediaDevices.getUserMedia) return;
 
       const originalGetUserMedia =
         mediaDevices.getUserMedia.bind(mediaDevices);
 
       mediaDevices.getUserMedia = function (constraints) {
 
-        if (
-          !constraints ||
-          constraints.video === false
-        ) {
+        if (!constraints ||
+            constraints.video === false) {
           return originalGetUserMedia(constraints);
         }
 
@@ -73,12 +62,10 @@
             ? {}
             : { ...constraints.video };
 
-        // Prioriza a câmera traseira
         videoConstraints.facingMode = {
           ideal: "environment"
         };
 
-        // Resolução para Android
         videoConstraints.width = {
           ideal: 640
         };
@@ -87,7 +74,6 @@
           ideal: 480
         };
 
-        // Mantém as demais configurações originais
         return originalGetUserMedia({
           ...constraints,
           video: videoConstraints
@@ -98,7 +84,7 @@
     })();
   </script>
 
-  <!-- AR.js -->
+  <!-- AR.js NFT -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar.js"></script>
 
 </head>
@@ -106,7 +92,7 @@
 <body>
 
   <div id="status">
-    Procurando marcador Kanji...
+    Procurando logo UniBH...
   </div>
 
   <a-scene
@@ -126,12 +112,17 @@
     "
   >
 
-    <!-- MARCADOR KANJI -->
+    <!-- MARCADOR NFT UNIBH -->
 
-    <a-marker
-      preset="kanji"
+    <a-nft
+      type="nft"
+      url="unibh_logo"
       id="marcador"
       emitevents="true"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance="0.01"
+      smoothThreshold="5"
     >
 
       <!-- OBJETO VIRTUAL -->
@@ -146,7 +137,7 @@
       >
       </a-box>
 
-    </a-marker>
+    </a-nft>
 
     <!-- CÂMERA -->
 
@@ -154,7 +145,7 @@
 
   </a-scene>
 
-  <!-- RECONHECIMENTO DO MARCADOR -->
+  <!-- RECONHECIMENTO NFT -->
 
   <script>
 
@@ -169,7 +160,7 @@
       function () {
 
         status.textContent =
-          "Marcador reconhecido!";
+          "Logo UniBH reconhecida!";
 
         status.style.background =
           "rgba(0, 120, 40, 0.85)";
@@ -182,7 +173,7 @@
       function () {
 
         status.textContent =
-          "Procurando marcador Kanji...";
+          "Procurando logo UniBH...";
 
         status.style.background =
           "rgba(0, 0, 0, 0.75)";
