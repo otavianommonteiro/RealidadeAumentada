@@ -7,9 +7,9 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
 
-  <title>Realidade Aumentada - Cachorro</title>
+  <title>Realidade Aumentada - Cachorro NFT</title>
 
-  <!-- A-Frame -->
+  <!-- A-FRAME -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
   <style>
@@ -84,15 +84,15 @@
     })();
   </script>
 
-  <!-- AR.js NFT -->
-  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar.js"></script>
+  <!-- AR.JS ESPECÍFICO PARA NFT -->
+  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar-nft.js"></script>
 
 </head>
 
 <body>
 
   <div id="status">
-    Procurando figura do cachorro
+    Inicializando reconhecimento NFT...
   </div>
 
   <a-scene
@@ -102,21 +102,22 @@
     renderer="
       antialias: false;
       colorManagement: true;
+      logarithmicDepthBuffer: true;
+      precision: medium;
     "
 
     arjs="
       sourceType: webcam;
       trackingMethod: best;
-      detectionMode: mono;
       debugUIEnabled: false;
     "
   >
 
-    <!-- MARCADOR NFT Cachorro -->
+    <!-- MARCADOR NFT DO CACHORRO -->
 
     <a-nft
       type="nft"
-      url="Portrait_of_a_dog_by_Damien_Linnane"
+      url="./Portrait_of_a_dog_by_Damien_Linnane"
       id="marcador"
       emitevents="true"
       smooth="true"
@@ -145,38 +146,80 @@
 
   </a-scene>
 
-  <!-- RECONHECIMENTO NFT -->
+  <!-- CONTROLE DE RECONHECIMENTO -->
 
   <script>
 
     const marcador =
       document.getElementById("marcador");
 
+    const cena =
+      document.querySelector("a-scene");
+
     const status =
       document.getElementById("status");
+
+    // Arquivos NFT carregados
+
+    cena.addEventListener(
+      "arjs-nft-loaded",
+      function () {
+
+        status.textContent =
+          "NFT carregado! Aponte para a imagem do cachorro.";
+
+        status.style.background =
+          "rgba(0, 80, 150, 0.85)";
+
+        console.log("Arquivos NFT carregados!");
+
+      }
+    );
+
+    // Imagem reconhecida
 
     marcador.addEventListener(
       "markerFound",
       function () {
 
         status.textContent =
-          "Figura do cachorro reconhecida!";
+          "CACHORRO RECONHECIDO!";
 
         status.style.background =
           "rgba(0, 120, 40, 0.85)";
 
+        console.log("NFT reconhecido!");
+
       }
     );
+
+    // Imagem deixou de ser reconhecida
 
     marcador.addEventListener(
       "markerLost",
       function () {
 
         status.textContent =
-          "Procurando logo Figura do cachorro...";
+          "Procurando imagem do cachorro...";
 
         status.style.background =
           "rgba(0, 0, 0, 0.75)";
+
+        console.log("NFT perdido!");
+
+      }
+    );
+
+    // Controle de erros da câmera
+
+    cena.addEventListener(
+      "camera-error",
+      function (event) {
+
+        status.textContent =
+          "Erro ao acessar a câmera.";
+
+        console.error("Erro de câmera:", event);
 
       }
     );
