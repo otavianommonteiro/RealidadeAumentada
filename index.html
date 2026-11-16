@@ -7,7 +7,7 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
 
-  <title>Realidade Aumentada - UniBH</title>
+  <title>Realidade Aumentada - Cachorro</title>
 
   <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -92,7 +92,7 @@
 <body>
 
   <div id="status">
-    Procurando logo UniBH...
+    Procurando figura do cachorro
   </div>
 
   <a-scene
@@ -112,11 +112,11 @@
     "
   >
 
-    <!-- MARCADOR NFT UNIBH -->
+    <!-- MARCADOR NFT Cachorro -->
 
     <a-nft
       type="nft"
-      url="unibh_logo"
+      url="Portrait_of_a_dog_by_Damien_Linnane"
       id="marcador"
       emitevents="true"
       smooth="true"
@@ -160,7 +160,7 @@
       function () {
 
         status.textContent =
-          "Logo UniBH reconhecida!";
+          "Figura do cachorro reconhecida!";
 
         status.style.background =
           "rgba(0, 120, 40, 0.85)";
@@ -173,7 +173,7 @@
       function () {
 
         status.textContent =
-          "Procurando logo UniBH...";
+          "Procurando logo Figura do cachorro...";
 
         status.style.background =
           "rgba(0, 0, 0, 0.75)";
