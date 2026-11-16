@@ -7,7 +7,7 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1">
 
-  <title>Realidade Aumentada - Cachorro NFT</title>
+  <title>Realidade Aumentada - NFT T-Rex</title>
 
   <!-- A-FRAME -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -25,7 +25,7 @@
       left: 12px;
       z-index: 10;
       padding: 10px 14px;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.80);
       color: white;
       border-radius: 8px;
       font-size: 14px;
@@ -62,10 +62,12 @@
             ? {}
             : { ...constraints.video };
 
+        // Câmera traseira
         videoConstraints.facingMode = {
           ideal: "environment"
         };
 
+        // Resolução
         videoConstraints.width = {
           ideal: 640
         };
@@ -84,7 +86,7 @@
     })();
   </script>
 
-  <!-- AR.JS ESPECÍFICO PARA NFT -->
+  <!-- AR.JS PARA NFT -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar-nft.js"></script>
 
 </head>
@@ -113,11 +115,11 @@
     "
   >
 
-    <!-- MARCADOR NFT DO CACHORRO -->
+    <!-- MARCADOR NFT T-REX -->
 
     <a-nft
       type="nft"
-      url="./Portrait_of_a_dog_by_Damien_Linnane"
+      url="./trex"
       id="marcador"
       emitevents="true"
       smooth="true"
@@ -146,83 +148,101 @@
 
   </a-scene>
 
-  <!-- CONTROLE DE RECONHECIMENTO -->
+  <!-- CONTROLE DO RECONHECIMENTO -->
 
   <script>
 
     const marcador =
       document.getElementById("marcador");
 
-    const cena =
-      document.querySelector("a-scene");
-
     const status =
       document.getElementById("status");
 
+    function atualizarStatus(mensagem, cor) {
+
+      status.textContent = mensagem;
+      status.style.background = cor;
+
+    }
+
+    // Inicialização da câmera
+
+    window.addEventListener("camera-init", function () {
+
+      console.log("Câmera inicializada.");
+
+      atualizarStatus(
+        "Câmera iniciada. Carregando NFT...",
+        "rgba(0, 80, 150, 0.85)"
+      );
+
+    });
+
     // Arquivos NFT carregados
 
-    cena.addEventListener(
-      "arjs-nft-loaded",
-      function () {
+    window.addEventListener("arjs-nft-loaded", function (event) {
 
-        status.textContent =
-          "NFT carregado! Aponte para a imagem do cachorro.";
+      console.log("NFT carregado:", event.detail);
 
-        status.style.background =
-          "rgba(0, 80, 150, 0.85)";
+      atualizarStatus(
+        "NFT carregado! Aponte para o T-Rex.",
+        "rgba(0, 100, 150, 0.85)"
+      );
 
-        console.log("Arquivos NFT carregados!");
+    });
 
-      }
-    );
+    // Marcador reconhecido
 
-    // Imagem reconhecida
+    marcador.addEventListener("markerFound", function () {
 
-    marcador.addEventListener(
-      "markerFound",
-      function () {
+      console.log("T-Rex reconhecido!");
 
-        status.textContent =
-          "CACHORRO RECONHECIDO!";
+      atualizarStatus(
+        "T-REX RECONHECIDO!",
+        "rgba(0, 120, 40, 0.85)"
+      );
 
-        status.style.background =
-          "rgba(0, 120, 40, 0.85)";
+    });
 
-        console.log("NFT reconhecido!");
+    // Marcador perdido
 
-      }
-    );
+    marcador.addEventListener("markerLost", function () {
 
-    // Imagem deixou de ser reconhecida
+      console.log("Marcador perdido.");
 
-    marcador.addEventListener(
-      "markerLost",
-      function () {
+      atualizarStatus(
+        "Procurando marcador T-Rex...",
+        "rgba(0, 0, 0, 0.80)"
+      );
 
-        status.textContent =
-          "Procurando imagem do cachorro...";
+    });
 
-        status.style.background =
-          "rgba(0, 0, 0, 0.75)";
+    // Erros de câmera
 
-        console.log("NFT perdido!");
+    window.addEventListener("camera-error", function (event) {
 
-      }
-    );
+      console.error("Erro de câmera:", event);
 
-    // Controle de erros da câmera
+      atualizarStatus(
+        "Erro ao acessar a câmera.",
+        "rgba(180, 0, 0, 0.85)"
+      );
 
-    cena.addEventListener(
-      "camera-error",
-      function (event) {
+    });
 
-        status.textContent =
-          "Erro ao acessar a câmera.";
+    // Erros JavaScript
 
-        console.error("Erro de câmera:", event);
+    window.addEventListener("error", function (event) {
 
-      }
-    );
+      console.error("Erro JavaScript:", event.message);
+
+    });
+
+    window.addEventListener("unhandledrejection", function (event) {
+
+      console.error("Erro de carregamento:", event.reason);
+
+    });
 
   </script>
 
