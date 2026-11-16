@@ -27,49 +27,41 @@
 
     /* MENSAGEM DE STATUS */
 
-    #status {
-      position: fixed;
+    
+#status {
+  position: fixed;
+  top: 12px;
+  left: 8px;
+  right: 8px;
+  width: auto;
 
-      top: 12px;
-      left: 8px;
-      right: 8px;
+  box-sizing: border-box;
+  padding: 8px 12px;
 
-      width: auto;
-      box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.90);
+  color: #ffffff;
 
-      padding: 12px 10px;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 8px;
 
-      background: rgba(0, 0, 0, 0.90);
-      color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: bold;
 
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 10px;
+  text-align: center;
 
-      font-family: Arial, sans-serif;
-      font-size: 14px;
-      font-weight: bold;
-      line-height: 1.5;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
 
-      text-align: center;
+  height: auto;
+  max-height: none;
+  overflow: visible;
 
-      /* PERMITE QUE O TEXTO QUEBRE LINHAS */
-
-      white-space: normal;
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-
-      /* EVITA CORTES EM MENSAGENS GRANDES */
-
-      max-height: 30vh;
-      overflow-y: auto;
-
-      display: block;
-      visibility: visible;
-      opacity: 1;
-
-      z-index: 9999;
-      pointer-events: none;
-    }
+  z-index: 9999;
+  pointer-events: none;
+}
 
   </style>
 
@@ -298,15 +290,16 @@
 
       <!-- OBJETO VIRTUAL -->
 
-      <a-box
+      <a-sphere
         position="0 0.5 0"
-        width="1"
-        height="1"
-        depth="1"
-        color="#1a73e8"
-        material="roughness: 0.6"
-      >
-      </a-box>
+        radius="0.3"
+        material="
+        shader: flat;
+        color: #00ff00;
+        side: double;
+      "
+    >
+  </a-sphere>
 
     </a-nft>
 
