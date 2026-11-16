@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Museu Virtual - Tiranossauro Rex</title>
+<title>Museu Virtual dos Dinossauros</title>
 
 <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 
@@ -25,7 +25,7 @@ body {
   top: 0;
   width: 100%;
   padding: 10px;
-  background: rgba(0,0,0,.8);
+  background: rgba(0,0,0,.85);
   color: white;
   text-align: center;
   z-index: 10;
@@ -36,7 +36,7 @@ body {
   margin: 5px;
 }
 
-/* Painel de informações */
+/* Painel */
 
 #painel {
   display: none;
@@ -44,54 +44,79 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 85%;
-  max-width: 480px;
+  width: 88%;
+  max-width: 500px;
   max-height: 85vh;
   overflow-y: auto;
   background: #20382a;
   color: white;
-  padding: 20px;
+  padding: 18px;
   border-radius: 15px;
   text-align: center;
   z-index: 20;
   box-shadow: 0 0 25px black;
 }
 
-#painel img {
-  width: 100%;
-  max-height: 220px;
-  object-fit: contain;
-  border-radius: 10px;
-}
-
 #painel h2 {
   color: #c7e99a;
 }
 
-#painel p {
-  line-height: 1.5;
-  text-align: left;
+#fotoPrincipal {
+  width: 100%;
+  max-height: 210px;
+  object-fit: contain;
+  border-radius: 10px;
 }
 
-#painel button {
+#conteudo {
+  text-align: left;
+  line-height: 1.6;
+}
+
+#botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin: 15px 0;
+}
+
+button {
   background: #719b4c;
   color: white;
-  padding: 12px 25px;
   border: none;
   border-radius: 8px;
+  padding: 11px 14px;
   cursor: pointer;
+}
+
+button:hover {
+  background: #91b968;
+}
+
+.ativo {
+  background: #c28b37;
+}
+
+#imagemExtra {
+  display: none;
+  width: 100%;
+  max-height: 230px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-top: 10px;
 }
 
 #instrucoes {
   position: fixed;
-  bottom: 15px;
+  bottom: 12px;
   left: 10px;
-  background: rgba(0,0,0,.75);
+  z-index: 10;
+  background: rgba(0,0,0,.8);
   color: white;
   padding: 10px;
   border-radius: 8px;
-  font-size: 13px;
-  z-index: 10;
+  font-size: 12px;
 }
 
 </style>
@@ -99,60 +124,67 @@ body {
 
 <body>
 
-<!-- Cabeçalho -->
+<!-- CABEÇALHO -->
 
 <div id="cabecalho">
+
   <h2>🦖 Museu Virtual dos Dinossauros</h2>
-  <p>Explore e descubra a história dos gigantes pré-históricos</p>
+
+  <p>Conheça os gigantes da pré-história</p>
+
 </div>
 
-<!-- Instruções -->
+<!-- INSTRUÇÕES -->
 
 <div id="instrucoes">
-  Clique na fotografia do T-Rex para conhecer mais!
+
+  Clique na fotografia para conhecer o T-Rex.
   <br>
-  Use o mouse ou o dedo para olhar ao redor.
+  Arraste a tela para olhar ao redor.
+
 </div>
 
-<!-- Painel interativo -->
+<!-- PAINEL INTERATIVO -->
 
 <div id="painel">
 
   <img
+    id="fotoPrincipal"
     src="./imagens/trex.jpg"
     alt="Tiranossauro Rex">
 
-  <h2>Tiranossauro Rex</h2>
+  <h2>🦖 Tiranossauro Rex</h2>
 
-  <p>
-    <strong>Nome científico:</strong>
-    Tyrannosaurus rex
-  </p>
+  <div id="botoes">
 
-  <p>
-    <strong>Período:</strong>
-    Cretáceo Superior, há aproximadamente 68 a 66 milhões de anos.
-  </p>
+    <button onclick="mostrarAba('dados', this)">
+      Dados científicos
+    </button>
 
-  <p>
-    <strong>Alimentação:</strong>
-    Carnívora.
-  </p>
+    <button onclick="mostrarAba('curiosidades', this)">
+      Curiosidades
+    </button>
 
-  <p>
-    <strong>Comprimento:</strong>
-    Aproximadamente 12 a 13 metros.
-  </p>
+    <button onclick="mostrarAba('tamanho', this)">
+      Comparação
+    </button>
 
-  <p>
-    <strong>Peso:</strong>
-    Podia ultrapassar 8 toneladas.
-  </p>
+    <button onclick="mostrarAba('habitat', this)">
+      Habitat
+    </button>
 
-  <p>
-    <strong>Curiosidade:</strong>
-    Possuía uma das mordidas mais poderosas entre os animais terrestres conhecidos.
-  </p>
+  </div>
+
+  <div id="conteudo">
+
+    O Tiranossauro Rex foi um dos maiores predadores
+    terrestres que já existiram.
+
+  </div>
+
+  <img id="imagemExtra" src="" alt="Imagem complementar">
+
+  <br><br>
 
   <button onclick="fecharPainel()">
     Voltar ao museu
@@ -160,13 +192,11 @@ body {
 
 </div>
 
-<!-- Ambiente 3D -->
+<!-- MUSEU 3D -->
 
 <a-scene
   background="color: #263b30"
   vr-mode-ui="enabled: false">
-
-  <!-- Iluminação -->
 
   <a-light
     type="ambient"
@@ -179,7 +209,7 @@ body {
     intensity="2">
   </a-light>
 
-  <!-- Piso -->
+  <!-- PISO -->
 
   <a-plane
     rotation="-90 0 0"
@@ -188,7 +218,7 @@ body {
     color="#777064">
   </a-plane>
 
-  <!-- Parede -->
+  <!-- PAREDE -->
 
   <a-box
     position="0 2.5 -6"
@@ -198,7 +228,7 @@ body {
     color="#435847">
   </a-box>
 
-  <!-- Fotografia do T-Rex -->
+  <!-- FOTOGRAFIA DO T-REX -->
 
   <a-image
     id="fotoTrex"
@@ -207,10 +237,9 @@ body {
     width="4"
     height="3"
     class="clicavel">
-
   </a-image>
 
-  <!-- Câmera -->
+  <!-- CÂMERA -->
 
   <a-camera
     position="0 1.7 0"
@@ -229,17 +258,122 @@ body {
 
 <script>
 
-// Abrir informações ao clicar na fotografia
+// ABRIR A EXPOSIÇÃO
 
-const foto = document.querySelector("#fotoTrex");
-
-foto.addEventListener("click", function() {
+document.getElementById("fotoTrex")
+.addEventListener("click", function() {
 
   document.getElementById("painel").style.display = "block";
 
+  mostrarAba("dados");
+
 });
 
-// Fechar informações
+
+// INFORMAÇÕES DAS ABAS
+
+const conteudos = {
+
+  dados: `
+    <h3>📚 Dados científicos</h3>
+
+    <p><strong>Nome científico:</strong> Tyrannosaurus rex</p>
+
+    <p><strong>Período:</strong> Cretáceo Superior,
+    aproximadamente 68 a 66 milhões de anos atrás.</p>
+
+    <p><strong>Alimentação:</strong> Carnívora.</p>
+
+    <p><strong>Comprimento:</strong> Aproximadamente
+    12 a 13 metros.</p>
+
+    <p><strong>Peso:</strong> Podia ultrapassar
+    8 toneladas.</p>
+
+    <p><strong>Localização:</strong> América do Norte.</p>
+  `,
+
+  curiosidades: `
+    <h3>🔎 Você sabia?</h3>
+
+    <p>1. O T-Rex possuía dentes grandes e serrilhados.</p>
+
+    <p>2. Seus braços eram curtos, mas musculosos.</p>
+
+    <p>3. Possuía uma mordida extremamente poderosa.</p>
+
+    <p>4. Seu nome significa "rei dos lagartos tiranos".</p>
+  `,
+
+  tamanho: `
+    <h3>📏 Comparação de tamanho</h3>
+
+    <p>O T-Rex podia alcançar aproximadamente
+    12 a 13 metros de comprimento.</p>
+
+    <p>Isso equivale a vários seres humanos
+    posicionados em fila!</p>
+
+    <p>Observe a imagem para visualizar
+    a diferença de tamanho.</p>
+  `,
+
+  habitat: `
+    <h3>🌳 Onde vivia?</h3>
+
+    <p>O T-Rex habitava regiões que hoje fazem
+    parte da América do Norte.</p>
+
+    <p>Vivia em ambientes que incluíam florestas,
+    planícies e regiões próximas a rios.</p>
+
+    <p>Esses ambientes eram muito diferentes
+    dos atuais.</p>
+  `
+
+};
+
+
+// MOSTRAR INFORMAÇÕES
+
+function mostrarAba(aba, botao) {
+
+  document.getElementById("conteudo").innerHTML =
+    conteudos[aba];
+
+  const imagem = document.getElementById("imagemExtra");
+
+  imagem.style.display = "none";
+  imagem.src = "";
+
+  if (aba === "tamanho") {
+
+    imagem.src = "./imagens/comparacao.jpg";
+    imagem.style.display = "block";
+
+  }
+
+  if (aba === "habitat") {
+
+    imagem.src = "./imagens/habitat.jpg";
+    imagem.style.display = "block";
+
+  }
+
+  document.querySelectorAll("#botoes button")
+  .forEach(b => b.classList.remove("ativo"));
+
+  if (botao) {
+    botao.classList.add("ativo");
+  } else {
+    document.querySelectorAll("#botoes button")[0]
+    .classList.add("ativo");
+  }
+
+}
+
+
+// FECHAR PAINEL
 
 function fecharPainel() {
 
