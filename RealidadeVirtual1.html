@@ -1,24 +1,186 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Teste do Museu Virtual</title>
+<title>Museu Virtual - Tiranossauro Rex</title>
 
-  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+<style>
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* Cabeçalho */
+
+#cabecalho {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 10px;
+  background: rgba(0,0,0,.8);
+  color: white;
+  text-align: center;
+  z-index: 10;
+}
+
+#cabecalho h2 {
+  color: #b8df8b;
+  margin: 5px;
+}
+
+/* Painel de informações */
+
+#painel {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: #20382a;
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  z-index: 20;
+  box-shadow: 0 0 25px black;
+}
+
+#painel img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+#painel h2 {
+  color: #c7e99a;
+}
+
+#painel p {
+  line-height: 1.5;
+  text-align: left;
+}
+
+#painel button {
+  background: #719b4c;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#instrucoes {
+  position: fixed;
+  bottom: 15px;
+  left: 10px;
+  background: rgba(0,0,0,.75);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  z-index: 10;
+}
+
+</style>
 </head>
 
 <body>
+
+<!-- Cabeçalho -->
+
+<div id="cabecalho">
+  <h2>🦖 Museu Virtual dos Dinossauros</h2>
+  <p>Explore e descubra a história dos gigantes pré-históricos</p>
+</div>
+
+<!-- Instruções -->
+
+<div id="instrucoes">
+  Clique na fotografia do T-Rex para conhecer mais!
+  <br>
+  Use o mouse ou o dedo para olhar ao redor.
+</div>
+
+<!-- Painel interativo -->
+
+<div id="painel">
+
+  <img
+    src="./imagens/trex.jpg"
+    alt="Tiranossauro Rex">
+
+  <h2>Tiranossauro Rex</h2>
+
+  <p>
+    <strong>Nome científico:</strong>
+    Tyrannosaurus rex
+  </p>
+
+  <p>
+    <strong>Período:</strong>
+    Cretáceo Superior, há aproximadamente 68 a 66 milhões de anos.
+  </p>
+
+  <p>
+    <strong>Alimentação:</strong>
+    Carnívora.
+  </p>
+
+  <p>
+    <strong>Comprimento:</strong>
+    Aproximadamente 12 a 13 metros.
+  </p>
+
+  <p>
+    <strong>Peso:</strong>
+    Podia ultrapassar 8 toneladas.
+  </p>
+
+  <p>
+    <strong>Curiosidade:</strong>
+    Possuía uma das mordidas mais poderosas entre os animais terrestres conhecidos.
+  </p>
+
+  <button onclick="fecharPainel()">
+    Voltar ao museu
+  </button>
+
+</div>
+
+<!-- Ambiente 3D -->
 
 <a-scene
   background="color: #263b30"
   vr-mode-ui="enabled: false">
 
-  <a-light type="ambient" intensity="2"></a-light>
+  <!-- Iluminação -->
+
+  <a-light
+    type="ambient"
+    intensity="1.5">
+  </a-light>
+
+  <a-light
+    type="point"
+    position="0 4 -4"
+    intensity="2">
+  </a-light>
 
   <!-- Piso -->
+
   <a-plane
     rotation="-90 0 0"
     width="12"
@@ -27,6 +189,7 @@
   </a-plane>
 
   <!-- Parede -->
+
   <a-box
     position="0 2.5 -6"
     width="12"
@@ -35,22 +198,56 @@
     color="#435847">
   </a-box>
 
-  <!-- Fotografia -->
+  <!-- Fotografia do T-Rex -->
+
   <a-image
-    src="./imagens/triceratops.jpg"
+    id="fotoTrex"
+    src="./imagens/trex.jpg"
     position="0 2.5 -5.8"
     width="4"
-    height="3">
+    height="3"
+    class="clicavel">
+
   </a-image>
 
   <!-- Câmera -->
+
   <a-camera
     position="0 1.7 0"
     look-controls
     wasd-controls>
+
+    <a-cursor
+      color="#c7e99a"
+      fuse="false"
+      raycaster="objects: .clicavel">
+    </a-cursor>
+
   </a-camera>
 
 </a-scene>
+
+<script>
+
+// Abrir informações ao clicar na fotografia
+
+const foto = document.querySelector("#fotoTrex");
+
+foto.addEventListener("click", function() {
+
+  document.getElementById("painel").style.display = "block";
+
+});
+
+// Fechar informações
+
+function fecharPainel() {
+
+  document.getElementById("painel").style.display = "none";
+
+}
+
+</script>
 
 </body>
 </html>
