@@ -1,101 +1,55 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Teste de Imagem 3D</title>
-
-<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+<title>Teste de Fotografia</title>
 
 <style>
 body {
   margin: 0;
+  background: #263b30;
+  color: white;
   font-family: Arial;
+  text-align: center;
 }
 
-#status {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 100;
-  background: black;
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
+#foto {
+  width: 90%;
+  max-width: 600px;
+  margin-top: 30px;
+  border: 5px solid #c7e99a;
+  border-radius: 10px;
 }
 </style>
-
 </head>
 
 <body>
 
-<div id="status">Carregando fotografia...</div>
+<h2>Museu dos Dinossauros</h2>
 
-<a-scene
-  renderer="antialias: false; precision: mediump"
-  vr-mode-ui="enabled: false">
+<p>Teste de exibição da fotografia</p>
 
-  <a-assets>
-    <img
-      id="fotoTrex"
-      src="./imagens/trex.jpg"
-      crossorigin="anonymous">
-  </a-assets>
+<img
+  id="foto"
+  src="./imagens/trex.jpg"
+  alt="Tiranossauro Rex">
 
-  <!-- PAREDE -->
-  <a-box
-    position="0 2 -5"
-    width="10"
-    height="5"
-    depth="0.2"
-    color="#435847">
-  </a-box>
-
-  <!-- FOTOGRAFIA -->
-  <a-plane
-    id="exposicao"
-    position="0 2.5 -4.85"
-    width="4"
-    height="3"
-    material="
-      shader: flat;
-      src: #fotoTrex;
-      side: double
-    ">
-  </a-plane>
-
-  <!-- CÂMERA SEM CONTROLE DE ORIENTAÇÃO -->
-  <a-camera
-    position="0 1.7 0"
-    look-controls="enabled: false"
-    wasd-controls="enabled: false">
-  </a-camera>
-
-</a-scene>
+<p id="status">Carregando...</p>
 
 <script>
 
-const imagem = document.getElementById("fotoTrex");
+const foto = document.getElementById("foto");
 const status = document.getElementById("status");
 
-imagem.addEventListener("load", function() {
-  status.innerHTML =
-    "Imagem carregada: " +
-    imagem.naturalWidth + " x " +
-    imagem.naturalHeight;
-});
+foto.onload = function() {
+  status.innerHTML = "Fotografia carregada com sucesso!";
+};
 
-imagem.addEventListener("error", function() {
-  status.innerHTML = "ERRO AO CARREGAR A IMAGEM";
-});
-
-document.querySelector("a-scene")
-.addEventListener("loaded", function() {
-  console.log("Cena A-Frame carregada");
-});
+foto.onerror = function() {
+  status.innerHTML = "Erro ao carregar fotografia.";
+};
 
 </script>
 
