@@ -4,9 +4,8 @@
 
 <head>
   <meta charset="UTF-8">
-
   <meta name="viewport"
-        content="width=device-width, initial-scale=1, viewport-fit=cover">
+        content="width=device-width, initial-scale=1">
 
   <title>Realidade Aumentada - NFT T-Rex</title>
 
@@ -18,14 +17,12 @@
 
   <style>
 
-    html, body {
+    /* CONFIGURAÇÃO ORIGINAL DA PÁGINA */
+
+    body {
       margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
       overflow: hidden;
       font-family: Arial, sans-serif;
-      background: transparent;
     }
 
     /* MENSAGEM DE STATUS */
@@ -33,15 +30,14 @@
     #status {
       position: fixed;
 
-      top: calc(env(safe-area-inset-top, 0px) + 12px);
-      left: 12px;
-      right: 12px;
+      top: 12px;
+      left: 8px;
+      right: 8px;
 
       width: auto;
-      min-height: 40px;
       box-sizing: border-box;
 
-      padding: 12px 14px;
+      padding: 12px 10px;
 
       background: rgba(0, 0, 0, 0.90);
       color: #ffffff;
@@ -51,19 +47,27 @@
 
       font-family: Arial, sans-serif;
       font-size: 14px;
-      line-height: 1.5;
       font-weight: bold;
+      line-height: 1.5;
 
       text-align: center;
 
+      /* PERMITE QUE O TEXTO QUEBRE LINHAS */
+
       white-space: normal;
-      overflow-wrap: anywhere;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+
+      /* EVITA CORTES EM MENSAGENS GRANDES */
+
+      max-height: 30vh;
+      overflow-y: auto;
 
       display: block;
       visibility: visible;
       opacity: 1;
 
-      z-index: 999999;
+      z-index: 9999;
       pointer-events: none;
     }
 
@@ -88,8 +92,6 @@
     let marcadorEncontrado = false;
     let timeoutNFT = null;
 
-    // ATUALIZAÇÃO DA MENSAGEM
-
     function atualizarStatus(mensagem, cor) {
 
       status.textContent = mensagem;
@@ -109,8 +111,6 @@
         "Câmera iniciada. Carregando arquivos NFT...",
         "rgba(0, 80, 150, 0.90)"
       );
-
-      // TEMPO MÁXIMO PARA CARREGAMENTO NFT
 
       timeoutNFT = setTimeout(function () {
 
@@ -262,7 +262,7 @@
 
   </script>
 
-  <!-- CENA AR -->
+  <!-- CENA AR: CONFIGURAÇÃO ORIGINAL PRESERVADA -->
 
   <a-scene
     embedded
@@ -310,7 +310,7 @@
 
     </a-nft>
 
-    <!-- CÂMERA -->
+    <!-- CÂMERA ORIGINAL -->
 
     <a-entity camera></a-entity>
 
