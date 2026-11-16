@@ -196,7 +196,8 @@ button:hover {
 
 <a-scene
   background="color: #263b30"
-  vr-mode-ui="enabled: false">
+  vr-mode-ui="enabled: false"
+  renderer="antialias: false; precision: mediump">
 
   <a-light
     type="ambient"
@@ -242,17 +243,17 @@ button:hover {
   <!-- CÂMERA -->
 
   <a-camera
-    position="0 1.7 0"
-    look-controls
-    wasd-controls>
+  position="0 1.7 0"
+  look-controls="magicWindowTrackingEnabled: false; touchEnabled: true; mouseEnabled: true"
+  wasd-controls="enabled: false">
 
-    <a-cursor
-      color="#c7e99a"
-      fuse="false"
-      raycaster="objects: .clicavel">
-    </a-cursor>
+  <a-cursor
+    color="#c7e99a"
+    fuse="false"
+    raycaster="objects: .clicavel">
+  </a-cursor>
 
-  </a-camera>
+</a-camera>
 
 </a-scene>
 
